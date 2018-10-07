@@ -1,4 +1,4 @@
-from distutils.core import setup
+from distutils.core import setup, Extension
 from Cython.Build import cythonize
 
-setup(ext_modules = cythonize('GameState.pyx'))
+setup(ext_modules = cythonize(Extension("game", sources=["GameState.pyx", "GameState.C"], language="c++")))
