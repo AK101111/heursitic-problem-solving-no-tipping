@@ -67,7 +67,7 @@ void GameState::add(const std::pair<int, int>& indexWeight){
 
     selfLeft--;
 }
-
+// always check lagality of removing before calling this
 void GameState::remove(const std::pair<int, int>& indexWeight){
     weights[indexWeight.first + (boardLen/2)] = 0;
     weightsLeftSelf[indexWeight.second] = true;
@@ -78,6 +78,7 @@ void GameState::remove(const std::pair<int, int>& indexWeight){
     selfLeft++;
 }
 
+// absorbs game state from server
 void GameState::absorb(const std::vector<int>& boardState){
     for(size_t i=0; i<boardState.size(); ++i){
         if(boardState[i] == 0 && weights[i] != 0){
@@ -105,36 +106,51 @@ int GameState::heuristic() const{
     return 0;
 }
 
-int alphaBetaSearch(GameState gameState, int depth, int alpha, int beta, bool  maximisingPlayer){
-    if(depth == 0 || gameState.terminalNode())
-        return gameState.heuristic();
-    int value;
+// returns pair of gameValue, bestMove. gameValue is max achievable value if bestMove is chosen., returns pair(some value, (-100, -100)) for terminal nodes
+std::pair<int, std::pair<int, int>> alphaBetaSearch(GameState gameState, int depth, int alpha, int beta, bool  maximisingPlayer){
+    if(depth == 0) //|| gameState.terminalNode())
+        return std::make_pair(gameState.heuristic(), std::make_pair(-100, -100));
+    int value; std::pair<int, int> bestPlay;
+    auto nextMoves = gameState.nextMoves();
+    // terminal node
+    if(nextMoves.size() == 0)
+        return std::make_pair(gameState.heuristic(), std::make_pair(-100, -100));
+    // alpha beta
     if(maximisingPlayer){
         value = std::numeric_limits<int>::min();
-        for(auto& nextMove: gameState.nextMoves()){
-            value = std::max(value, alphaBetaSearch(nextMove, depth - 1, alpha, beta, false));
+        for(auto& nextMove: nextMoves){
+            auto next = alphaBetaSearch(nextMove.second, depth - 1, alpha, beta, false);
+            if(value < next.first){
+                value = next.first;
+                bestPlay = nextMove.first;
+            }
             alpha = std::max(alpha, value);
             if(alpha >= beta)
                 break;
         }
     }else{
         value = std::numeric_limits<int>::max();
-        for(auto& nextMove: gameState.nextMoves()){
-            value = std::max(value, alphaBetaSearch(nextMove, depth - 1, alpha, beta, true));
+        for(auto& nextMove: nextMoves){
+            auto next = alphaBetaSearch(nextMove.second, depth - 1, alpha, beta, true);
+            if(value < next.first){
+                value = next.first;
+                bestPlay = nextMove.first;
+            }
             beta = std::max(beta, value);
             if(alpha >= beta)
                 break;
         }
     }
-    return value;
+    return std::make_pair(value, bestPlay);
 }
 
 std::pair<int, int> GameState::play(){
-    // [TODO]
-    int value = alphaBetaSearch(*this, depth, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), true);
-    if(value)
-        return std::make_pair(1,0);
-    return std::make_pair(0,0);
+    auto pair = alphaBetaSearch(*this, depth, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), true).second;
+    if(pair.first == -100){
+        // change to random
+        return std::make_pair(0,0);
+    }
+    return pair.second;
 }
 
 void GameState::print() const{
@@ -170,8 +186,8 @@ bool GameState::terminalNode(){
     return true;
 }
 
-std::vector<GameState> GameState::nextMoves() const{
-    std::vector<GameState> nextMoveV;
+std::vector<std::pair<std::pair<int, int>, GameState>> GameState::nextMoves() const{
+    std::vector<std::pair<std::pair<int, int>, GameState> > nextMoveV;
     if(state == ADDITION){
         for(int i=0; i<=boardLen; ++i){
             if(weights[i] == 0){
@@ -182,7 +198,7 @@ std::vector<GameState> GameState::nextMoves() const{
                         std::swap(nextMove.selfLeft, nextMove.oppLeft);
                         std::swap(nextMove.weightsLeftSelf, nextMove.weightsLeftOpponent);
                         nextMove.state = REMOVAL;
-                        nextMoveV.emplace_back(std::move(nextMove));
+                        nextMoveV.emplace_back(std::make_pair(std::make_pair(i - boardLen/2, j), nextMove));
                         //nextMoveV.push_back(tempMove);
                     }   
                 }
@@ -198,7 +214,7 @@ std::vector<GameState> GameState::nextMoves() const{
                         std::swap(nextMove.selfLeft, nextMove.oppLeft);
                         std::swap(nextMove.weightsLeftSelf, nextMove.weightsLeftOpponent);
                         nextMove.state = ADDITION;
-                        nextMoveV.emplace_back(std::move(nextMove));
+                        nextMoveV.emplace_back(std::make_pair(std::make_pair(i - boardLen/2, j), nextMove));
                         //nextMoveV.push_back(tempMove);
                     }
                 }

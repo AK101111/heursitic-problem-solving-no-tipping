@@ -38,14 +38,14 @@ class NoTippingClient(object):
             else:
                 position = self.remove(board_state)
                 self.client.send_data(json.dumps({"position": position}))
-                
-            
-            
+
+
+
 
     def place(self, board_state):
         """
         PLACE YOUR PLACING ALGORITHM HERE
-        
+
         Inputs:
         board_state - array of what weight is at a given position on the board
 
@@ -70,7 +70,7 @@ class NoTippingClient(object):
     def remove(self, board_state):
         """
         PLACE YOUR REMOVING ALGORITHM HERE
-        
+
         Inputs:
         board_state - array of what weight is at a given position on the board
 

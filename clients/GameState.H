@@ -43,6 +43,6 @@ public:
     void print() const;
     int heuristic() const;
     bool terminalNode();
-    std::vector<GameState> nextMoves() const;
+    std::vector<std::pair<std::pair<int, int>, GameState> > nextMoves() const;
 };
 }
