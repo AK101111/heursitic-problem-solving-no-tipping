@@ -42,6 +42,6 @@ public:
     // index(-30 to 30), weight
     void absorb(const std::vector<int>& boardState);
     std::pair<int, int> play();
-    void print() const;
+    void printBoard();
 };
 }
