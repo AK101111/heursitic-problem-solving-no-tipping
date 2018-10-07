@@ -34,15 +34,14 @@ private:
     bool legalToRemove(const std::pair<int, int>& indexWeight) const;
     void add(const std::pair<int, int>& indexWeight);
     void remove(const std::pair<int, int>& indexWeight);
-    void idfs();
+    int heuristic() const;
+    std::vector<std::pair<std::pair<int, int>, GameState> > nextMoves() const;
+    std::pair<int, std::pair<int, int> > alphaBetaSearch(GameState gameState, int depth, int alpha, int beta, bool maxPlayer);
 public:
     GameState();
     // index(-30 to 30), weight
     void absorb(const std::vector<int>& boardState);
     std::pair<int, int> play();
     void print() const;
-    int heuristic() const;
-    bool terminalNode();
-    std::vector<std::pair<std::pair<int, int>, GameState> > nextMoves() const;
 };
 }

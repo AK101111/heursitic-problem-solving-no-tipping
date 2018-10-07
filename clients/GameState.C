@@ -101,20 +101,20 @@ void GameState::absorb(const std::vector<int>& boardState){
     }
 }
 
-int GameState::heuristic() const{
+int heuristic(const GameState& gamestate){
     // [TODO]
     return 0;
 }
 
 // returns pair of gameValue, bestMove. gameValue is max achievable value if bestMove is chosen., returns pair(some value, (-100, -100)) for terminal nodes
-std::pair<int, std::pair<int, int>> alphaBetaSearch(GameState gameState, int depth, int alpha, int beta, bool  maximisingPlayer){
+std::pair<int, std::pair<int, int> > GameState::alphaBetaSearch(GameState gameState, int depth, int alpha, int beta, bool maximisingPlayer){
     if(depth == 0) //|| gameState.terminalNode())
-        return std::make_pair(gameState.heuristic(), std::make_pair(-100, -100));
+        return std::make_pair(rtt::heuristic(gameState), std::make_pair(-100, -100));
     int value; std::pair<int, int> bestPlay;
     auto nextMoves = gameState.nextMoves();
     // terminal node
     if(nextMoves.size() == 0)
-        return std::make_pair(gameState.heuristic(), std::make_pair(-100, -100));
+        return std::make_pair(rtt::heuristic(gameState), std::make_pair(-100, -100));
     // alpha beta
     if(maximisingPlayer){
         value = std::numeric_limits<int>::min();
@@ -145,12 +145,17 @@ std::pair<int, std::pair<int, int>> alphaBetaSearch(GameState gameState, int dep
 }
 
 std::pair<int, int> GameState::play(){
-    auto pair = alphaBetaSearch(*this, depth, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), true).second;
+    std::pair<int, int> pair;
+    if(state == ADDITION)
+        pair = alphaBetaSearch(*this, 2, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), true).second;
+    else
+        pair = alphaBetaSearch(*this, 6, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), true).second;
+
     if(pair.first == -100){
         // change to random
         return std::make_pair(0,0);
     }
-    return pair.second;
+    return pair;
 }
 
 void GameState::print() const{
@@ -180,11 +185,6 @@ void GameState::print() const{
 
     std::cout << "---------------------------------------" << std::endl;
 }  
-
-bool GameState::terminalNode(){
-    // [TODO]
-    return true;
-}
 
 std::vector<std::pair<std::pair<int, int>, GameState>> GameState::nextMoves() const{
     std::vector<std::pair<std::pair<int, int>, GameState> > nextMoveV;

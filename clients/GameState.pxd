@@ -12,5 +12,3 @@ cdef extern from "GameState.H" namespace "rtt":
         void absorb(const vector[int]& boardState)
         pair[int, int] play()
         void print() const
-        void heuristic() const
-        vector[GameState] nextMoves() const
