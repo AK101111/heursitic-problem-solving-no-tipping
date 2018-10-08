@@ -37,11 +37,11 @@ class NoTippingClient(object):
 
             self.gameState.absorb(self.board_state)
             if response['move_type'] == 'place':
-                position, weight = self.gameState.play()
+                position, weight = self.gameState.play(2)
                 print("sending " + str(position) + " " + str(weight))
                 self.client.send_data(json.dumps({"position": position, "weight": weight}))
             else:
-                position = self.play()
+                position = self.gameState.play(6)
                 print("sending " + str(position))
                 self.client.send_data(json.dumps({"position": position}))
 

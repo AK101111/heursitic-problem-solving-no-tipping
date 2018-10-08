@@ -4,6 +4,8 @@
 #include <vector>
 #include <iostream>
 #include <limits>
+#include <tuple>
+#include <omp.h>
 
 namespace rtt{
 enum State{ADDITION, REMOVAL};
@@ -18,9 +20,9 @@ private:
     std::vector<bool> weightsLeftSelf;
     std::vector<bool> weightsLeftOpponent;
 
-    int selfLeft, oppLeft;
+    char selfLeft, oppLeft;
     // positions available are from 0-60(inclusive) which correspond to -30,30
-    std::vector<int> weights;
+    std::vector<char> weights;
     State state;
     // torque is negative if inside with right hand rule
     // torque from -1 one
@@ -28,6 +30,7 @@ private:
     // torque from -3
     int threetorque;
     // torque from -3
+
     bool balanceWith(const std::pair<int, int>& indexWeight) const;
     bool legalToAdd(const std::pair<int, int>& indexWeight) const;
     bool balanceWithout(const std::pair<int, int>& indexWeight) const;
@@ -35,13 +38,14 @@ private:
     void add(const std::pair<int, int>& indexWeight);
     void remove(const std::pair<int, int>& indexWeight);
     int heuristic() const;
-    std::vector<std::pair<std::pair<int, int>, GameState> > nextMoves() const;
+    std::vector<std::tuple< int, int, GameState> > nextMoves() const;
     std::pair<int, std::pair<int, int> > alphaBetaSearch(GameState gameState, int depth, int alpha, int beta, bool maxPlayer);
 public:
+    int hvalue;
     GameState();
     // index(-30 to 30), weight
     void absorb(const std::vector<int>& boardState);
-    std::pair<int, int> play();
+    std::pair<int, int> play(int depth);
     void printBoard();
 };
 }

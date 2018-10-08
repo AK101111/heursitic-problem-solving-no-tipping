@@ -7,7 +7,7 @@ cdef extern from "GameState.H" namespace "rtt":
     cdef cppclass GameState:
         GameState() except+
         void absorb(const vector[int]& boardState)
-        pair[int, int] play()
+        pair[int, int] play(int depth)
         void printBoard()
 
 cdef class PyGameState:
@@ -15,7 +15,7 @@ cdef class PyGameState:
 
     def __init__(self):
         self.cgameState = GameState()
-
+    
     def printBoard(self):
         self.cgameState.printBoard()
     
@@ -23,8 +23,9 @@ cdef class PyGameState:
         cdef vector[int] vect = board_state
         self.cgameState.absorb(vect)
 
-    def play(self):
-        (index, wt) = self.cgameState.play()
+    def play(self, depth):
+        (index, wt) = self.cgameState.play(depth)
+        print("searched " + str(index) + " " + str(wt))
         # wt negative means we are removing
         if wt == -1:
             # no sol found, play random
