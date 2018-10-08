@@ -1,0 +1,111 @@
+searched -2 25
+sending -2 25
+detected addition 30 25
+searched -6 24
+sending -6 24
+detected addition 34 24
+searched -9 23
+sending -9 23
+detected addition 29 23
+searched 7 22
+sending 7 22
+detected addition 14 22
+searched 11 21
+sending 11 21
+detected addition 11 21
+searched 19 20
+sending 19 20
+detected addition 7 20
+searched 9 19
+sending 9 19
+detected addition 33 19
+searched -14 18
+sending -14 18
+detected addition 55 18
+searched -21 17
+sending -21 17
+detected addition 12 17
+searched 28 16
+sending 28 16
+detected addition 6 16
+searched 15 15
+sending 15 15
+detected addition 0 15
+searched 14 14
+sending 14 14
+detected addition 10 14
+searched 26 13
+sending 26 13
+detected addition 17 13
+searched 17 12
+sending 17 12
+detected addition 2 12
+searched 8 11
+sending 8 11
+detected addition 5 11
+searched 21 10
+sending 21 10
+detected addition 18 10
+searched 18 9
+sending 18 9
+detected addition 35 9
+searched -15 8
+sending -15 8
+detected addition 53 8
+searched -10 7
+sending -10 7
+detected addition 42 7
+searched 29 6
+sending 29 6
+detected addition 40 6
+searched 1 5
+sending 1 5
+detected addition 60 5
+searched -5 4
+sending -5 4
+detected addition 22 4
+searched -3 3
+sending -3 3
+detected addition 19 3
+searched -7 2
+sending -7 2
+detected addition 54 2
+searched 20 1
+sending 20 1
+detected addition 4 1
+searched -7 -1
+sending -7
+detected removal 4 
+searched -4 -1
+sending -4
+detected removal 50 
+searched -3 -1
+sending -3
+detected removal 54 
+searched -11 -1
+sending -11
+detected removal 22 
+searched 1 -1
+sending 1
+detected removal 25 
+searched 10 -1
+sending 10
+detected removal 42 
+searched 30 -1
+sending 30
+detected removal 59 
+searched 23 -1
+sending 23
+detected removal 35 	
+searched 18 -1
+sending 18
+detected removal 15 
+searched -10 -1
+sending -10
+detected removal 5 
+searched -12 -1
+sending -12
+detected removal 51 
+searched 8 -1
+sending 8
+Game Over!

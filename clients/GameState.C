@@ -121,63 +121,29 @@ std::pair<int, std::pair<int, int> > GameState::alphaBetaSearch(GameState gameSt
     // alpha beta
     if(maximisingPlayer){
         value = std::numeric_limits<int>::min();
-        if(depth > 2){
-            volatile bool flag=false;
-            //#pragma omp parallel for shared(flag)
-            for(size_t i=0; i<nextMoves.size(); ++i){
-                if(flag) continue;
-                auto& nextMove = nextMoves[i];
-                auto next = alphaBetaSearch(std::get<2>(nextMove), depth - 1, alpha, beta, false);
-                if(value < next.first){
-                    value = next.first;
-                    bestPlay.first = std::get<0>(nextMove); bestPlay.second = std::get<1>(nextMove);
-                }
-                alpha = std::max(alpha, value);
-                if(alpha >= beta)
-                    flag=true;
+        for(size_t i=0; i<nextMoves.size(); ++i){
+            auto& nextMove = nextMoves[i];
+            auto next = alphaBetaSearch(std::get<2>(nextMove), depth - 1, alpha, beta, false);
+            if(value < next.first){
+                value = next.first;
+                bestPlay.first = std::get<0>(nextMove); bestPlay.second = std::get<1>(nextMove);
             }
-        }else{
-            for(size_t i=0; i<nextMoves.size(); ++i){
-                auto& nextMove = nextMoves[i];
-                auto next = alphaBetaSearch(std::get<2>(nextMove), depth - 1, alpha, beta, false);
-                if(value < next.first){
-                    value = next.first;
-                    bestPlay.first = std::get<0>(nextMove); bestPlay.second = std::get<1>(nextMove);
-                }
-                alpha = std::max(alpha, value);
-                if(alpha >= beta)
-                    break;
-            }
+            alpha = std::max(alpha, value);
+            if(alpha >= beta)
+                break;
         }
     }else{
         value = std::numeric_limits<int>::max();
-        if(depth > 2){
-            volatile bool flag=false;
-            //#pragma omp parallel for shared(flag)
-            for(size_t i=0; i<nextMoves.size(); ++i){
-                if(flag) continue;
-                auto& nextMove = nextMoves[i];
-                auto next = alphaBetaSearch(std::get<2>(nextMove), depth - 1, alpha, beta, true);
-                if(value > next.first){
-                    value = next.first;
-                    bestPlay.first = std::get<0>(nextMove); bestPlay.second = std::get<1>(nextMove);
-                }
-                beta = std::min(beta, value);
-                if(alpha >= beta)
-                    flag = true;
+        for(size_t i=0; i<nextMoves.size(); ++i){
+            auto& nextMove = nextMoves[i];
+            auto next = alphaBetaSearch(std::get<2>(nextMove), depth - 1, alpha, beta, true);
+            if(value > next.first){
+                value = next.first;
+                bestPlay.first = std::get<0>(nextMove); bestPlay.second = std::get<1>(nextMove);
             }
-        }else{
-            for(size_t i=0; i<nextMoves.size(); ++i){
-                auto& nextMove = nextMoves[i];
-                auto next = alphaBetaSearch(std::get<2>(nextMove), depth - 1, alpha, beta, true);
-                if(value > next.first){
-                    value = next.first;
-                    bestPlay.first = std::get<0>(nextMove); bestPlay.second = std::get<1>(nextMove);
-                }
-                beta = std::min(beta, value);
-                if(alpha >= beta)
-                    break;
-            }
+            beta = std::min(beta, value);
+            if(alpha >= beta)
+                break;
         }
     }
     return std::make_pair(value, bestPlay);
@@ -231,7 +197,12 @@ void GameState::printBoard(){
 std::vector<std::tuple<int, int, GameState> > GameState::nextMoves() const{
     std::vector<std::tuple<int, int, GameState> > nextMoveV;
     if(state == ADDITION){
-        for(int i=0; i<=boardLen; ++i){
+        std::vector<int> randomOrder(boardLen+1);
+        for(int i=0; i<=boardLen; ++i)
+            randomOrder[i] = i;
+        std::random_shuffle ( randomOrder.begin(), randomOrder.end()  );
+        for(int j=0; j<=boardLen; ++j){
+            int i = randomOrder[j];
             if(weights[i] == 0){
                 for(int j=gameK; j >= 1; j--){
                     std::pair<int, int> tempMove(i - boardLen/2, j);
@@ -247,7 +218,12 @@ std::vector<std::tuple<int, int, GameState> > GameState::nextMoves() const{
             }
         }
     }else{
-        for(int i=0; i<=boardLen; ++i){
+        std::vector<int> randomOrder(boardLen+1);
+        for(int i=0; i<=boardLen; ++i)
+            randomOrder[i] = i;
+        std::random_shuffle ( randomOrder.begin(), randomOrder.end()  );
+        for(int j=0; j<=boardLen; ++j){
+            int i = randomOrder[j];
             if(weights[i] != 0){
                 std::pair<int, int> tempMove(i - boardLen/2, weights[i]);
                 if(legalToRemove(tempMove)){

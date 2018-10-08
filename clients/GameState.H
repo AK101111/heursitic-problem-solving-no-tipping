@@ -5,8 +5,8 @@
 #include <iostream>
 #include <limits>
 #include <tuple>
-#include <omp.h>
-
+//#include <omp.h>
+#include <algorithm>
 namespace rtt{
 enum State{ADDITION, REMOVAL};
 
