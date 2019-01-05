@@ -1,5 +1,7 @@
 # No Tipping Game
 
+Implementation of Alpha beta search pruning for the game search space in C++. Using Cython to bake C++ search in python client for handling communication.
+
 ## Problem Statement
 
 Given a uniform, flat board (made of a titanium alloy) 60 meters long and weighing 3 kilograms, consider it ranging from -30 meters to 30 meters. So the center of gravity is at 0. We place two supports of equal heights at positions -3 and -1 and a 3 kilogram block at position -4.
